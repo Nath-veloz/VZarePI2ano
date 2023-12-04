@@ -1,9 +1,16 @@
 const express = require('express')
+const cors = require('cors');
+
 const app = express();
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
+app.use(cors());
 
-app.listen(9000, () => console. log("OK"));
+const PORT = 3333;
+
+app.listen(PORT , () => {
+    console. log(`Aplicação respondendo em: http://localhost:${PORT}`)
+});
 
 const mysql = require('mysql2/promise')
 const connection = mysql.createPool({
@@ -33,7 +40,7 @@ app.get('/pessoa/:id', async (req, res)=>{
     const [query] = await connection.execute('select * from testepessoa.pessoa where id = ?' , {id});
     if(query.length === 0) return res.status (400).json({mensagem: ' Nao encontrado.'})
     return res.status(200).json(query);
-    })
+})
 
 app.get('/pessoa/busca/:nome', async (req, res)=>{
     const {nome} = req.params;
@@ -204,4 +211,3 @@ app.delete('/usuario', async (req,res)=>{
     const [query] = await connection.execute('delete from tabela_doacoes.usuario where id = ?', [id])
     return res.status(200).json(query);
 })
-
